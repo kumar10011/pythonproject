@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Wireless Headphones",
+    "price": 49.99,
+    "image": "https://cdn-icons-png.flaticon.com/512/1047/1047711.png",
+    "description": "High quality Bluetooth headphones with noise cancellation."
+  },
+  {
+    "id": 2,
+    "name": "Smart Watch",
+    "price": 79.99,
+    "image": "https://cdn-icons-png.flaticon.com/512/3700/3700497.png",
+    "description": "Track fitness, heart rate, and notifications easily."
+  },
+  {
+    "id": 3,
+    "name": "Gaming Mouse",
+    "price": 29.99,
+    "image": "https://cdn-icons-png.flaticon.com/512/3405/3405865.png",
+    "description": "RGB wired gaming mouse with adjustable DPI."
+  }
+]
