@@ -53,7 +53,7 @@ pipeline {
                         sudo docker stop aws-ecommerce || true &&
                         sudo docker rm aws-ecommerce || true &&
                         sudo docker pull ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} &&
-                        sudo docker run -d -p 80:80 --name aws-ecommerce ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
+                        sudo docker run -d -p 3000:3000 --name aws-ecommerce ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
                         "
                     '''
                 }
