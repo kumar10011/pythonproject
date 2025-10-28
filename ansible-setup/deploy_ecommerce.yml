@@ -1,0 +1,60 @@
+---
+- name: Deploy E-Commerce App on AWS EC2
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker GPG key
+      shell: |
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull latest E-Commerce app image
+      community.docker.docker_image:
+        name: yourdockerhubusername/ecommerce-app
+        source: pull
+
+    - name: Remove old container if exists
+      community.docker.docker_container:
+        name: ecommerce-app
+        state: absent
+
+    - name: Run E-Commerce app container
+      community.docker.docker_container:
+        name: ecommerce-app
+        image: yourdockerhubusername/ecommerce-app
+        state: started
+        ports:
+          - "80:5000"
+        restart_policy: always
+
