@@ -40,7 +40,7 @@ pipeline {
         stage('Install Docker on EC2 via Ansible') {
             steps {
                 sshagent(['anjanissh']) {
-                    sh 'ansible-playbook -i inventory.ini deploy_ecommerce.yml'
+                    sh 'ansible-playbook -i ansible-setup/inventory.ini ansible-setup/deploy_ecommerce.yml'
                 }
             }
         }
