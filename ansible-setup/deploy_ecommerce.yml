@@ -1,17 +1,15 @@
 ---
-- name: Deploy E-Commerce App on AWS EC2
-  hosts: web
+- name: Install Docker on Ubuntu EC2
+  hosts: ubuntu
   become: yes
-
   tasks:
-    - name: Update system packages
+    - name: Update apt package index
       apt:
         update_cache: yes
-        upgrade: dist
 
-    - name: Install required packages
+    - name: Install prerequisite packages
       apt:
-        name:
+        name: 
           - apt-transport-https
           - ca-certificates
           - curl
@@ -19,12 +17,13 @@
         state: present
 
     - name: Add Docker GPG key
-      shell: |
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
     - name: Add Docker repository
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
         state: present
 
     - name: Install Docker
@@ -33,28 +32,24 @@
         state: present
         update_cache: yes
 
-    - name: Start and enable Docker service
-      service:
+    - name: Enable and start Docker service
+      systemd:
         name: docker
+        enabled: yes
         state: started
-        enabled: true
 
-    - name: Pull latest E-Commerce app image
-      community.docker.docker_image:
-        name: yourdockerhubusername/ecommerce-app
-        source: pull
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
 
-    - name: Remove old container if exists
-      community.docker.docker_container:
-        name: ecommerce-app
-        state: absent
+    - name: Verify Docker installation
+      command: docker --version
+      register: docker_version
 
-    - name: Run E-Commerce app container
-      community.docker.docker_container:
-        name: ecommerce-app
-        image: yourdockerhubusername/ecommerce-app
-        state: started
-        ports:
-          - "80:5000"
-        restart_policy: always
+    - name: Show Docker version
+      debug:
+        msg: "Installed version: {{ docker_version.stdout }}"
+
 
